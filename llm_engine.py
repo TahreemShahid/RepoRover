@@ -6,6 +6,8 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from graph_engine import CodeGraph
+
 SYSTEM_PROMPT = """You are RepoRover, an expert code analyst. You have been given a structured map of a Python codebase.
 
 The codebase map below shows every file, function, and class that was found, with line numbers and a short preview of each entity's code.
