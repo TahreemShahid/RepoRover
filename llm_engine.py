@@ -3,7 +3,6 @@ llm_engine.py — Answer questions about the code graph using Groq + LangChain.
 """
 
 from langchain_groq import ChatGroq
-from langchain.prompts import ChatPromptTemplate
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage, SystemMessage
 
