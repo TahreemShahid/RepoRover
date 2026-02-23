@@ -45,10 +45,6 @@ def get_function_and_class_chunks(code_source: str, filename: str = "unknown"):
                 }
             ))
 
-            if node.type == "class_definition":
-                if not cursor.goto_next_sibling():
-                    break
-                continue
 
         if cursor.goto_first_child():
             continue
