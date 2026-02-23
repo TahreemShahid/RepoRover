@@ -1,12 +1,11 @@
 """
 llm_engine.py — Answer questions about the code graph using Groq + LangChain.
-No Cypher, no Neo4j. We pass graph context directly to the LLM.
 """
+
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
-from langchain.schema import HumanMessage, SystemMessage
-from graph_engine import CodeGraph
-
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import HumanMessage, SystemMessage
 
 SYSTEM_PROMPT = """You are RepoRover, an expert code analyst. You have been given a structured map of a Python codebase.
 
