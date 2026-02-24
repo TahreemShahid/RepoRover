@@ -6,8 +6,8 @@ No database. No setup. Just bring your Groq API key.
 ## How it works
 
 1. Paste a public GitHub repo URL
-2. RepoRover clones it, parses all Python files with Tree-sitter
-3. Builds an in-memory code graph using NetworkX
+2. RepoRover clones it and parses **all files** (Python, JavaScript, config files, Markdown, and more)
+3. Builds an in-memory code graph using NetworkX (Python files get function/class extraction via Tree-sitter)
 4. You chat — questions are answered by Groq (Llama 3.3) using the graph as context
 
 ## Quick Start
@@ -17,12 +17,11 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-
 ## Tech Stack
 
 - **Streamlit** — UI
-- **Tree-sitter** — Python code parsing
-- **NetworkX** — In-memory code graph 
+- **Tree-sitter** — Python code parsing (functions & classes)
+- **NetworkX** — In-memory code graph
 - **LangChain + Groq** — LLM question answering (Llama 3.3 70B)
 
 ## Architecture
@@ -32,7 +31,10 @@ User pastes GitHub URL
         ↓
 git clone --depth=1 (tmpdir)
         ↓
-Tree-sitter parses all .py files
+Scan all files (exclude binaries: images, archives, etc.)
+        ↓
+Python files → Tree-sitter parses functions & classes
+Other files → Raw content stored as single entity
         ↓
 NetworkX graph: File --[DEFINES]--> CodeEntity
         ↓
@@ -45,9 +47,14 @@ Groq LLM answers with graph context
 tmpdir deleted after clone
 ```
 
+## Supported Files
+
+- **Python (`.py`)** — Full parsing of functions and classes
+- **All other text files** — JavaScript, TypeScript, JSON, YAML, MD, HTML, CSS, configs, etc. (stored as raw content)
+- Binary files (images, archives, fonts) are automatically skipped
+
 ## Limitations
 
 - Public repos only
-- Python files only (for now)
-- Large repos (1000+ files) may be slow on free hosting
+- Large repos may be slow on free hosting
 - Graph lives in memory — cleared on session end

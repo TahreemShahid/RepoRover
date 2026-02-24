@@ -16,28 +16,30 @@ st.markdown("""
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
   :root {
-    --bg: #0d0f14;
-    --surface: #13161e;
-    --surface2: #1b1f2b;
-    --accent: #00e5ff;
-    --accent2: #7c6af7;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --border: #1e2535;
-    --success: #22c55e;
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --accent: #00d4aa;
+    --accent2: #6366f1;
+    --accent3: #a855f7;
+    --text: #e8ecf4;
+    --muted: #6b7280;
+    --border: #252a35;
+    --success: #10b981;
     --warning: #f59e0b;
   }
 
   html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif;
-    background-color: var(--bg) !important;
+    background: linear-gradient(160deg, #0a0c10 0%, #0d1117 50%, #0a0c10 100%) !important;
     color: var(--text) !important;
   }
 
   /* Sidebar */
   section[data-testid="stSidebar"] {
-    background-color: var(--surface) !important;
+    background: linear-gradient(180deg, #111318 0%, #0d0f14 100%) !important;
     border-right: 1px solid var(--border);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.3);
   }
 
   /* Main container */
@@ -49,23 +51,42 @@ st.markdown("""
   /* Hero header */
   .hero {
     text-align: center;
-    padding: 3rem 0 2rem;
+    padding: 3.5rem 0 2.5rem;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(99,102,241,0.15));
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 9999px;
+    padding: 0.35rem 1rem;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 1.5px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
   }
   .hero-title {
     font-family: 'Space Mono', monospace;
-    font-size: 3rem;
+    font-size: 3.25rem;
     font-weight: 700;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #00d4aa 0%, #6366f1 50%, #a855f7 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 0;
   }
   .hero-sub {
     color: var(--muted);
-    font-size: 1.05rem;
-    margin-top: 0.5rem;
-    font-weight: 300;
+    font-size: 1.1rem;
+    margin-top: 0.75rem;
+    font-weight: 400;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
   }
 
   /* Stat cards */
@@ -86,7 +107,9 @@ st.markdown("""
     font-family: 'Space Mono', monospace;
     font-size: 2rem;
     font-weight: 700;
-    color: var(--accent);
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     line-height: 1;
   }
   .stat-label {
@@ -99,23 +122,25 @@ st.markdown("""
 
   /* Chat messages */
   .chat-user {
-    background: var(--surface2);
+    background: linear-gradient(135deg, rgba(24,28,36,0.9) 0%, rgba(17,19,24,0.95) 100%);
     border: 1px solid var(--border);
-    border-radius: 16px 16px 4px 16px;
-    padding: 1rem 1.25rem;
-    margin: 0.75rem 0;
+    border-radius: 18px 18px 6px 18px;
+    padding: 1.1rem 1.4rem;
+    margin: 0.85rem 0;
     margin-left: 15%;
     font-size: 0.95rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   }
   .chat-assistant {
-    background: linear-gradient(135deg, #0f1a2e, #111827);
-    border: 1px solid #1e3a5f;
-    border-radius: 16px 16px 16px 4px;
-    padding: 1rem 1.25rem;
-    margin: 0.75rem 0;
+    background: linear-gradient(135deg, rgba(16,20,32,0.95) 0%, rgba(10,14,28,0.98) 100%);
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: 18px 18px 18px 6px;
+    padding: 1.1rem 1.4rem;
+    margin: 0.85rem 0;
     margin-right: 15%;
     font-size: 0.95rem;
     line-height: 1.7;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 1px rgba(0,212,170,0.1);
   }
   .chat-label {
     font-family: 'Space Mono', monospace;
@@ -135,24 +160,26 @@ st.markdown("""
   }
   .stTextInput input:focus, .stTextArea textarea:focus {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.15) !important;
+    box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.2) !important;
   }
 
   /* Buttons */
   .stButton > button {
-    background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
-    color: #000 !important;
+    background: linear-gradient(135deg, #00d4aa 0%, #6366f1 100%) !important;
+    color: #fff !important;
     font-family: 'Space Mono', monospace !important;
     font-weight: 700 !important;
     border: none !important;
-    border-radius: 8px !important;
-    padding: 0.6rem 1.5rem !important;
+    border-radius: 10px !important;
+    padding: 0.65rem 1.5rem !important;
     font-size: 0.85rem !important;
     letter-spacing: 0.5px !important;
-    transition: opacity 0.2s !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 14px rgba(0,212,170,0.25) !important;
   }
   .stButton > button:hover {
-    opacity: 0.85 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(0,212,170,0.35) !important;
   }
 
   /* Suggestion chips */
@@ -172,11 +199,11 @@ st.markdown("""
 
   /* Progress / status */
   .status-box {
-    background: var(--surface2);
+    background: linear-gradient(90deg, rgba(0,212,170,0.06) 0%, var(--surface2) 100%);
     border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 0.8rem 1.1rem;
     font-family: 'Space Mono', monospace;
     font-size: 0.82rem;
     color: var(--muted);
@@ -240,6 +267,7 @@ if "loading_logs" not in st.session_state:
 with st.sidebar:
     st.markdown('<p class="sidebar-label">🛰️ RepoRover</p>', unsafe_allow_html=True)
     st.markdown("**Chat with any public GitHub repo**")
+    st.caption("Python, JS, configs, docs — all files indexed")
     st.markdown("---")
 
     st.markdown('<p class="sidebar-label">Groq API Key</p>', unsafe_allow_html=True)
@@ -273,11 +301,11 @@ with st.sidebar:
         st.markdown("---")
         st.markdown('<p class="sidebar-label">Try asking</p>', unsafe_allow_html=True)
         suggestions = [
+            "What does this repo do?",
             "What are the main classes?",
             "List all functions",
-            "What does this repo do?",
             "Where is the main entry point?",
-            "What files are there?",
+            "What file types are in this repo?",
         ]
         for s in suggestions:
             if st.button(s, key=f"sug_{s}", use_container_width=True):
@@ -285,7 +313,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown(
-        '<p style="font-size:0.72rem; color:#475569;">Powered by Groq · LangChain · Tree-sitter · NetworkX</p>',
+        '<p style="font-size:0.7rem; color:#4b5563;">Powered by Groq · LangChain · Tree-sitter · NetworkX</p>',
         unsafe_allow_html=True
     )
 
@@ -293,8 +321,9 @@ with st.sidebar:
 # ── Main Area ──────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero">
+  <div class="hero-badge">All file types supported</div>
   <p class="hero-title">🛰️ RepoRover</p>
-  <p class="hero-sub">Drop any public GitHub repo. Ask anything about its code.</p>
+  <p class="hero-sub">Drop any public GitHub repo — Python, JS, configs & more. Ask anything about the codebase.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -327,7 +356,7 @@ if load_btn:
             st.session_state.repo_info = info
             st.session_state.loading_logs = status_lines
             logs_placeholder.empty()
-            st.success(f"✅ Loaded **{info['parsed_files']}** files · **{info['functions']}** functions · **{info['classes']}** classes. Start chatting!")
+            st.success(f"✅ Loaded **{info['parsed_files']}** files · **{info['functions']}** functions · **{info['classes']}** classes. Ready to chat!")
             st.rerun()
         except Exception as e:
             logs_placeholder.empty()
@@ -341,16 +370,16 @@ if st.session_state.repo_info:
     repo_name = url.rstrip("/").split("/")[-1] if url else "Repository"
 
     st.markdown(f"""
-    <div style="background:#13161e; border:1px solid #1e2535; border-radius:12px; padding:1rem 1.5rem; margin-bottom:1.5rem;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="background:linear-gradient(135deg, #111318 0%, #181c24 100%); border:1px solid #252a35; border-radius:14px; padding:1.25rem 1.75rem; margin-bottom:1.5rem; box-shadow:0 4px 24px rgba(0,0,0,0.2);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
         <div>
-          <span style="font-family:'Space Mono',monospace; font-size:0.85rem; color:#00e5ff;">📦 {repo_name}</span>
-          <span style="font-size:0.75rem; color:#475569; margin-left:1rem;">{url}</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.9rem; color:#00d4aa; font-weight:600;">📦 {repo_name}</span>
+          <span style="font-size:0.72rem; color:#6b7280; margin-left:1rem;">{url}</span>
         </div>
-        <div style="display:flex; gap:2rem; text-align:center;">
-          <div><span style="font-family:'Space Mono',monospace; font-size:1.4rem; color:#00e5ff;">{info['parsed_files']}</span><br><span style="font-size:0.7rem; color:#64748b; text-transform:uppercase; letter-spacing:1px;">Files</span></div>
-          <div><span style="font-family:'Space Mono',monospace; font-size:1.4rem; color:#7c6af7;">{info['functions']}</span><br><span style="font-size:0.7rem; color:#64748b; text-transform:uppercase; letter-spacing:1px;">Functions</span></div>
-          <div><span style="font-family:'Space Mono',monospace; font-size:1.4rem; color:#22c55e;">{info['classes']}</span><br><span style="font-size:0.7rem; color:#64748b; text-transform:uppercase; letter-spacing:1px;">Classes</span></div>
+        <div style="display:flex; gap:2.5rem; text-align:center;">
+          <div><span style="font-family:'Space Mono',monospace; font-size:1.5rem; color:#00d4aa; font-weight:700;">{info['parsed_files']}</span><br><span style="font-size:0.68rem; color:#6b7280; text-transform:uppercase; letter-spacing:1.5px;">Files</span></div>
+          <div><span style="font-family:'Space Mono',monospace; font-size:1.5rem; color:#6366f1; font-weight:700;">{info['functions']}</span><br><span style="font-size:0.68rem; color:#6b7280; text-transform:uppercase; letter-spacing:1.5px;">Functions</span></div>
+          <div><span style="font-family:'Space Mono',monospace; font-size:1.5rem; color:#10b981; font-weight:700;">{info['classes']}</span><br><span style="font-size:0.68rem; color:#6b7280; text-transform:uppercase; letter-spacing:1.5px;">Classes</span></div>
         </div>
       </div>
     </div>
@@ -361,10 +390,10 @@ if st.session_state.repo_info:
 if not st.session_state.graph:
     # Empty state
     st.markdown("""
-    <div style="text-align:center; padding:4rem 2rem; color:#475569;">
-      <div style="font-size:3rem; margin-bottom:1rem;">📂</div>
-      <p style="font-size:1rem;">Enter a Groq API key and a GitHub repo URL in the sidebar, then click <strong style="color:#00e5ff;">Load Repository</strong>.</p>
-      <p style="font-size:0.85rem; margin-top:0.5rem;">Works with any <em>public</em> Python repository.</p>
+    <div style="text-align:center; padding:4rem 2rem; color:#6b7280;">
+      <div style="font-size:3.5rem; margin-bottom:1.25rem; opacity:0.9;">📂</div>
+      <p style="font-size:1.05rem;">Enter your Groq API key and a GitHub repo URL in the sidebar, then click <strong style="color:#00d4aa;">Load Repository</strong>.</p>
+      <p style="font-size:0.9rem; margin-top:0.75rem;">Works with any <em>public</em> repository — Python, JavaScript, configs, docs & more.</p>
     </div>
     """, unsafe_allow_html=True)
 else:
