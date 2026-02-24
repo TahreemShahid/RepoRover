@@ -1,8 +1,4 @@
-"""
-graph_engine.py — In-memory code graph using NetworkX.
-Replaces Neo4j entirely. No database, no credentials, no cost.
-Each Streamlit session gets its own graph instance.
-"""
+
 import networkx as nx
 from pathlib import Path
 from step1_parser import get_function_and_class_chunks
@@ -17,21 +13,35 @@ class CodeGraph:
         # Add File node
         self.graph.add_node(filename, node_type="file", name=filename)
 
-        chunks = get_function_and_class_chunks(code_source, filename)
-        for chunk in chunks:
-            entity_id = f"{filename}::{chunk.metadata['name']}"
+        if filename.endswith(".py"):
+            chunks = get_function_and_class_chunks(code_source, filename)
+            for chunk in chunks:
+                entity_id = f"{filename}::{chunk.metadata['name']}"
+                self.graph.add_node(
+                    entity_id,
+                    node_type="code_entity",
+                    name=chunk.metadata["name"],
+                    type=chunk.metadata["type"],
+                    content=chunk.page_content,
+                    start_line=chunk.metadata["start_line"],
+                    filename=filename,
+                )
+                self.graph.add_edge(filename, entity_id, relation="DEFINES")
+            return len(chunks)
+        else:
+            # Non-Python: add raw content as a single entity
+            entity_id = f"{filename}::<raw>"
             self.graph.add_node(
                 entity_id,
                 node_type="code_entity",
-                name=chunk.metadata["name"],
-                type=chunk.metadata["type"],
-                content=chunk.page_content,
-                start_line=chunk.metadata["start_line"],
+                name="<raw>",
+                type="raw_file",
+                content=code_source,
+                start_line=0,
                 filename=filename,
             )
             self.graph.add_edge(filename, entity_id, relation="DEFINES")
-
-        return len(chunks)
+            return 1
 
     def clear(self):
         self.graph.clear()
@@ -88,7 +98,8 @@ class CodeGraph:
                 continue
             lines.append(f"\n📄 FILE: {filename}")
             for e in entities:
-                kind = "class" if e["type"] == "class_definition" else "function"
+                t = e.get("type")
+                kind = "class" if t == "class_definition" else "function" if t == "function_definition" else "file"
                 lines.append(f"  [{kind}] {e['name']}  (line {e.get('start_line', '?')})")
                 # Include first 3 lines of content as a hint
                 preview = "\n".join(e["content"].splitlines()[:3])

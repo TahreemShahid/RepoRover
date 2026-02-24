@@ -8,9 +8,9 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 from graph_engine import CodeGraph
 
-SYSTEM_PROMPT = """You are RepoRover, an expert code analyst. You have been given a structured map of a Python codebase.
+SYSTEM_PROMPT = """You are RepoRover, an expert code analyst. You have been given a structured map of a codebase.
 
-The codebase map below shows every file, function, and class that was found, with line numbers and a short preview of each entity's code.
+The codebase map below shows every file and (for Python) each function and class that was found, with line numbers and a short preview of each entity's code.
 
 Your job is to answer the user's question accurately using ONLY the information in this map.
 - Be specific: mention exact function names, class names, and file paths.
@@ -56,7 +56,8 @@ def _build_smart_context(question: str, graph: CodeGraph) -> str:
         if results:
             lines = [f"ENTITIES MATCHING '{word}':"]
             for r in results:
-                kind = "class" if r["type"] == "class_definition" else "function"
+                t = r.get("type")
+                kind = "class" if t == "class_definition" else "function" if t == "function_definition" else "file"
                 lines.append(f"\n--- [{kind}] {r['name']} in {r['filename']} ---")
                 # Send the actual full code block, not just the first line!
                 lines.append(r['content'])
@@ -70,7 +71,8 @@ def _build_smart_context(question: str, graph: CodeGraph) -> str:
             continue
         lines.append(f"\n📄 FILE: {filename}")
         for e in entities:
-            kind = "class" if e["type"] == "class_definition" else "function"
+            t = e.get("type")
+            kind = "class" if t == "class_definition" else "function" if t == "function_definition" else "file"
             lines.append(f"  [{kind}] {e['name']}  (line {e.get('start_line', '?')})")
             # Provide 10 lines instead of 3 so the AI can actually see methods
             preview = "\n".join(e["content"].splitlines()[:10])

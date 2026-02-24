@@ -1,7 +1,6 @@
 """
-repo_loader.py — Clone a GitHub repo and feed Python files into CodeGraph.
+repo_loader.py — Clone a GitHub repo and feed all files into CodeGraph.
 """
-import os
 import shutil
 import tempfile
 import subprocess
@@ -9,8 +8,10 @@ from pathlib import Path
 from graph_engine import CodeGraph
 
 
-MAX_FILE_SIZE_BYTES = 150_000   # skip files larger than ~150 KB
-MAX_FILES = 200                  # cap total files to avoid blowing up memory
+# No limits: read all files from the repo
+BINARY_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".ico", ".bmp", ".webp",
+                     ".pdf", ".zip", ".tar", ".gz", ".7z", ".rar", ".exe",
+                     ".pyc", ".pyo", ".so", ".dll", ".dylib", ".bin", ".woff", ".woff2", ".ttf", ".otf"}
 
 
 def _is_valid_github_url(url: str) -> bool:
@@ -27,7 +28,7 @@ def _normalize_url(url: str) -> str:
 
 def clone_and_build_graph(github_url: str, progress_callback=None) -> tuple[CodeGraph, dict]:
     """
-    Clone a public GitHub repo, parse all Python files, build a CodeGraph.
+    Clone a public GitHub repo, parse all files (excluding binaries), build a CodeGraph.
     Returns (graph, info_dict).
     progress_callback(message: str) is called with status updates.
     """
@@ -50,31 +51,31 @@ def clone_and_build_graph(github_url: str, progress_callback=None) -> tuple[Code
         if result.returncode != 0:
             raise RuntimeError(f"Git clone failed: {result.stderr.strip()}")
 
-        log("🔍 Scanning Python files...")
-        py_files = list(Path(tmpdir).rglob("*.py"))
+        log("🔍 Scanning all files...")
+        all_files = [f for f in Path(tmpdir).rglob("*") if f.is_file()]
 
-        # Filter out common non-useful dirs
-        skip_dirs = {"__pycache__", ".git", "node_modules", "venv", ".venv", "env", "migrations", "test", "tests"}
-        py_files = [
-            f for f in py_files
+        # Filter out common non-useful dirs and binary files
+        skip_dirs = {"__pycache__", ".git", "node_modules", "venv", ".venv", "env"}
+        files = [
+            f for f in all_files
             if not any(part in skip_dirs for part in f.parts)
-            and f.stat().st_size < MAX_FILE_SIZE_BYTES
-        ][:MAX_FILES]
+            and f.suffix.lower() not in BINARY_EXTENSIONS
+        ]
 
-        if not py_files:
-            raise RuntimeError("No Python files found in this repository.")
+        if not files:
+            raise RuntimeError("No readable files found in this repository.")
 
         graph = CodeGraph()
         parsed_files = 0
         skipped = 0
 
-        for i, filepath in enumerate(py_files):
+        for i, filepath in enumerate(files):
             rel_path = str(filepath.relative_to(tmpdir))
-            log(f"⚙️  Parsing ({i+1}/{len(py_files)}): {rel_path}")
+            log(f"⚙️  Parsing ({i+1}/{len(files)}): {rel_path}")
             try:
                 code = filepath.read_text(encoding="utf-8", errors="ignore")
                 count = graph.add_file(rel_path, code)
-                if count > 0:
+                if count >= 0:
                     parsed_files += 1
                 else:
                     skipped += 1
@@ -85,7 +86,7 @@ def clone_and_build_graph(github_url: str, progress_callback=None) -> tuple[Code
         stats = graph.get_stats()
         info = {
             "repo_url": github_url,
-            "total_py_files": len(py_files),
+            "total_files": len(files),
             "parsed_files": parsed_files,
             "skipped_files": skipped,
             **stats,
